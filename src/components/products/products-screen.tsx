@@ -54,16 +54,16 @@ export default function ProductsScreen() {
   const query = search.trim().toLocaleLowerCase();
   const filtered = products.filter(p => (!category || p.category === category) &&
     (!query || p.name.toLocaleLowerCase().includes(query) || p.barcode?.toLocaleLowerCase().includes(query)) &&
-    (stock === "all" || (stock === "low" ? p.quantity > 0 && p.quantity <= 5 : stock === "out" ? p.quantity === 0 : p.quantity > 5)));
+    (stock === "all" || (stock === "low" ? Number(p.quantity) > 0 && Number(p.quantity) <= 5 : stock === "out" ? Number(p.quantity) === 0 : Number(p.quantity) > 5)));
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, pages);
   const visible = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-  const lowStock = products.filter(p => p.quantity > 0 && p.quantity <= 5).length;
-  const outOfStock = products.filter(p => p.quantity === 0).length;
+  const lowStock = products.filter(p => Number(p.quantity) > 0 && Number(p.quantity) <= 5).length;
+  const outOfStock = products.filter(p => Number(p.quantity) === 0).length;
   const stats: { label: string; value: number; detail: string; icon: IconName; tone: string }[] = [
     { label: "Total Products", value: products.length, detail: "In your catalogue", icon: "box", tone: s.blue },
-    { label: "Total Stock", value: products.reduce((sum, p) => sum + p.quantity, 0), detail: "Units on hand", icon: "stock", tone: s.teal },
-    { label: "Low Stock", value: lowStock, detail: `${outOfStock} out of stock · 1–5 units is low`, icon: "alert", tone: s.amber },
+    { label: "Available Products", value: products.filter(p => Number(p.quantity) > 0).length, detail: "Products with stock", icon: "stock", tone: s.teal },
+    { label: "Low Stock", value: lowStock, detail: `${outOfStock} out of stock · Up to 5 selected units is low`, icon: "alert", tone: s.amber },
     { label: "Categories", value: new Set(products.map(p => p.category)).size, detail: "Across your products", icon: "tag", tone: s.violet },
   ];
   function resetFilters() { setSearch(""); setCategory(""); setStock("all"); setPage(1); }

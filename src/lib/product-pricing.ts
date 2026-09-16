@@ -1,6 +1,10 @@
 export const measurementUnits = ["g", "Kg", "Ltr", "Pkt", "Pcs", "Bottle", "ml"] as const;
 export type MeasurementUnit = typeof measurementUnits[number];
 
+export function isDiscreteUnit(unit: string) {
+  return unit === "Pcs" || unit === "Pkt" || unit === "Bottle";
+}
+
 export function isMeasurementUnit(value: unknown): value is MeasurementUnit {
   return typeof value === "string" && measurementUnits.some(unit => unit === value);
 }

@@ -50,3 +50,6 @@ next-env.d.ts
 
 # Local product photos (keep with database backups)
 /data/product-images/
+
+# Local database safety backups
+/data/backups/

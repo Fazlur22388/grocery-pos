@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode, type FormEvent } from "react";
 import { Icon } from "./icon";
 import { productRequest, type Product } from "./product";
-import { measurementUnits, isMeasurementUnit, isPricingAmount } from "@/lib/product-pricing";
+import { measurementUnits, isMeasurementUnit, isPricingAmount, isDiscreteUnit } from "@/lib/product-pricing";
 import { ProductImagePicker, type ProductPhoto } from "./product-image-picker";
 import s from "./products.module.css";
 
@@ -47,8 +47,8 @@ export function ProductDialog({ product, categories, onClose, onSaved }: { produ
       setError("Enter a pricing amount greater than zero and select a unit.");
       return;
     }
-    if (!name || !category || !priceText || !quantityText || !Number.isFinite(price) || price < 0 || !Number.isInteger(quantity) || quantity < 0 || quantity > 2147483647) {
-      setError("Enter a name, category, valid non-negative price, and a whole stock quantity from 0 to 2147483647.");
+    if (!name || !category || !priceText || !quantityText || !Number.isFinite(price) || price < 0 || !Number.isFinite(quantity) || quantity < 0 || (isDiscreteUnit(unit) && !Number.isInteger(quantity))) {
+      setError("Enter valid pricing and stock. Pcs, Pkt and Bottle stock must be whole numbers.");
       return;
     }
     lock.current = true; setBusy(true); setError("");
@@ -70,7 +70,7 @@ export function ProductDialog({ product, categories, onClose, onSaved }: { produ
       const saved = await productRequest<Product>(product ? `/api/products/${product.id}` : "/api/products", {
         method: product ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, category, price, pricingAmount, unit, quantity, barcode: String(form.get("barcode") ?? "").trim() || null, image }),
+        body: JSON.stringify({ name, category, price: priceText, pricingAmount: String(form.get("pricingAmount") ?? "").trim(), unit, quantity: quantityText, ...(product ? { version: product.version } : {}), barcode: String(form.get("barcode") ?? "").trim() || null, image }),
       });
       onSaved(saved);
     } catch (err) { setError(err instanceof Error ? err.message : "Unable to save product."); }
@@ -90,12 +90,13 @@ export function ProductDialog({ product, categories, onClose, onSaved }: { produ
         <label>Category <span>*</span><input name="category" required list="product-categories" defaultValue={product?.category} placeholder="Select or enter a category" /><datalist id="product-categories">{categories.map(c => <option key={c} value={c} />)}</datalist></label>
         <p className={s.formSection}>PRICING</p>
         <div className={s.formGrid}>
-          <label>Pricing amount <span>*</span><input name="pricingAmount" type="number" required min="0" step="any" defaultValue={product?.pricingAmount ?? 1} placeholder="e.g. 1 or 100" aria-describedby="pricing-hint" /></label>
+          <label>Pricing amount <span>*</span><input name="pricingAmount" type="number" required min="0.001" max="999999999.999" step="0.001" defaultValue={product?.pricingAmount ?? 1} placeholder="e.g. 1 or 100" aria-describedby="pricing-hint" /></label>
           <label>Unit <span>*</span><select name="unit" required defaultValue={product?.unit ?? "Pcs"}>{measurementUnits.map(unit => <option key={unit} value={unit}>{unit}</option>)}</select></label>
         </div>
-        <label>Unit price (Rs.) <span>*</span><input name="price" type="number" required min="0" step="any" defaultValue={product?.price} placeholder="0.00" aria-describedby="pricing-hint" /></label>
+        <label>Unit price (Rs.) <span>*</span><input name="price" type="number" required min="0" max="999999999.99" step="0.01" defaultValue={product?.price} placeholder="0.00" aria-describedby="pricing-hint" /></label>
         <p id="pricing-hint" className={s.fieldHint}>Price for the amount above. For cashews at Rs. 700 per 100 g, enter 100, g, and 700.</p>
-        <label>Stock quantity <span>*</span><input name="quantity" type="number" required min="0" max="2147483647" step="1" defaultValue={product?.quantity ?? 0} /></label>
+        <label>Stock quantity ({preview.unit}) <span>*</span><input name="quantity" type="number" required min="0" max="999999999.999" step={isDiscreteUnit(preview.unit) ? "1" : "0.001"} defaultValue={product?.quantity ?? 0} /></label>
+        <p className={s.fieldHint}>Stock is measured in {preview.unit}. Changing the unit does not convert existing stock.</p>
         <label>Barcode <small>Optional</small><input name="barcode" defaultValue={product?.barcode ?? ""} placeholder="Scan or enter barcode" /></label>
         <p className={s.fieldHint}>A barcode helps you find this product quickly at the counter.</p>
       </fieldset>

@@ -11,12 +11,45 @@ model Product {
   id        Int      @id @default(autoincrement())
   name      String
   category  String
-  price     Float
-  pricingAmount Float @default(1)
+  price     Decimal
+  pricingAmount Decimal @default(1)
   unit      String   @default("Pcs")
-  quantity  Int      @default(0)
+  quantity  Decimal  @default(0)
+  version   Int      @default(0)
   image     String?
   barcode   String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  saleItems SaleItem[]
+}
+
+model Sale {
+  id             Int        @id @default(autoincrement())
+  requestId      String     @unique
+  subtotal       Decimal
+  discount       Decimal    @default(0)
+  total          Decimal
+  paymentMethod  String
+  amountTendered Decimal?
+  changeDue      Decimal?
+  createdAt      DateTime   @default(now())
+  items          SaleItem[]
+}
+
+model SaleItem {
+  id            Int      @id @default(autoincrement())
+  saleId        Int
+  productId     Int?
+  productName   String
+  barcode       String?
+  unit          String
+  pricingAmount Decimal
+  unitPrice     Decimal
+  quantity      Decimal
+  lineTotal     Decimal
+  sale          Sale     @relation(fields: [saleId], references: [id], onDelete: Restrict)
+  product       Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([saleId])
+  @@index([productId])
 }

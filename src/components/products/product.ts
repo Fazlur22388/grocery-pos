@@ -2,10 +2,11 @@ export type Product = {
   id: number;
   name: string;
   category: string;
-  price: number;
-  pricingAmount: number;
+  price: string;
+  pricingAmount: string;
   unit: string;
-  quantity: number;
+  quantity: string;
+  version: number;
   barcode: string | null;
   image: string | null;
   createdAt: string;

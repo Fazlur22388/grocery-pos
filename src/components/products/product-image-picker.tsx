@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./icon";
+import { formatMoney } from "@/lib/format";
 import s from "./products.module.css";
 
 export type ProductPhoto = { file: File | null; url: string | null };
@@ -61,7 +62,6 @@ export function ProductImagePicker({ photo, onChange, busy, checking, onChecking
     }
   }
 
-  const amount = Number(price);
   return <section className={s.photoPanel} aria-label="Product photo and live preview">
     <div className={s.photoHeading}><span>PRODUCT PHOTO</span><span>Optional</span></div>
     <input
@@ -102,7 +102,7 @@ export function ProductImagePicker({ photo, onChange, busy, checking, onChecking
       <span className={s.photoPreviewLabel}>LIVE PRODUCT PREVIEW</span>
       <strong>{name.trim() || "Your product name"}</strong>
       <span>{category.trim() || "Product category"}</span>
-      <b>Rs. {(Number.isFinite(amount) && amount >= 0 ? amount : 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b>
+      <b>Rs. {formatMoney(price)}</b>
       <span>per {pricingAmount || "—"} {unit}</span>
     </div>
     {photo.url && <div className={s.photoControls}>
