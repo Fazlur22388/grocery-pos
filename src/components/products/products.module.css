@@ -72,12 +72,46 @@
 .toast { position: fixed; bottom: 25px; right: 28px; z-index: 30; display: flex; align-items: center; gap: 11px; max-width: min(460px, calc(100vw - 32px)); padding: 12px 14px; border: 1px solid #dce9df; border-radius: 10px; background: white; color: #2c4b3d; box-shadow: 0 8px 35px #142b4220; font-size: 13px; }.toast > span { color: #258361; background: #eafaef; padding: 5px; border-radius: 50%; display: flex; }.toast > button { margin-left: auto; }
 .dialog { border: 1px solid #e4e9f1; border-radius: 15px; padding: 0; width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); color: #17243b; box-shadow: 0 24px 100px #0c183945; }.dialog::backdrop { background: #0b173967; backdrop-filter: blur(3px); }
 .dialogHeader { display: flex; align-items: flex-start; justify-content: space-between; padding: 25px 27px 22px; border-bottom: 1px solid #e9edf3; }.dialogHeader h2 { font-size: 22px; letter-spacing: -.6px; margin: 0; }.dialogHeader p { color: #7c899b; font-size: 12px; margin: 7px 0 0; }
+.productDialog { width: min(790px, calc(100vw - 32px)); }
+.productEditor { display: grid; grid-template-columns: 285px minmax(0, 1fr); }
+.photoPanel { padding: 25px 22px; background: #f6f8fc; border-right: 1px solid #e7ecf4; min-width: 0; }
+.photoHeading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 17px; font-size: 10px; color: #74839b; letter-spacing: 1.2px; font-weight: 700; }
+.photoHeading > span:last-child { font-size: 10px; font-weight: 400; letter-spacing: 0; color: #929db0; }
+.photoDrop { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 13px; aspect-ratio: 1; width: 100%; border: 1.5px dashed #b8caee; border-radius: 12px; background: #edf3ff; color: #4163a2; overflow: hidden; padding: 18px 8px; }
+.photoDrop:hover, .photoDragging { border-color: #3669e1; background: #e5eeff; }
+.photoDrop:disabled { cursor: wait; opacity: .7; }
+.photoDrop > strong { font-size: 13px; color: #294774; font-weight: 600; }
+.photoDrop > span:not(.photoOverlay) { font-size: 11px; line-height: 1.6; }
+.photoUploadIcon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 17px; background: #fff; color: #6087d9; box-shadow: 0 3px 12px #3156a10b; }
+.photoDrop .photoBrowse { background: white; border: 1px solid #c9d8f7; border-radius: 6px; display: flex; align-items: center; gap: 5px; padding: 6px 10px; color: #3563c5; font-weight: 600; }
+.photoFilled { padding: 0; border: 1px solid #dce5f3; background: white; }
+.photoFilled img { display: block; width: 100%; height: 100%; position: absolute; object-fit: contain; padding: 8px; }
+.photoOverlay { position: absolute; bottom: 9px; right: 9px; display: flex; gap: 5px; align-items: center; font-size: 10px; border-radius: 5px; background: #172f54e8; color: white; padding: 7px 9px; }
+.photoUnavailable { display: flex; align-items: center; flex-direction: column; gap: 10px; color: #687e9e; }
+.photoUnavailable > span { color: #8d9aad; font-size: 10px; }
+.photoCaption { display: flex; flex-direction: column; padding: 19px 2px 15px; gap: 6px; border-bottom: 1px solid #e2e8f1; overflow-wrap: anywhere; }
+.photoPreviewLabel { color: #8697b2; font-size: 8px; letter-spacing: 1.3px; font-weight: 650; margin-bottom: 3px; }
+.photoCaption > strong { color: #293e60; font-size: 15px; font-weight: 650; }
+.photoCaption > span:not(.photoPreviewLabel) { color: #7f8da4; font-size: 11px; }
+.photoCaption > b { color: #315dc3; font-size: 18px; font-weight: 650; margin-top: 5px; font-variant-numeric: tabular-nums; }
+.photoControls { display: flex; align-items: center; gap: 8px; padding-top: 14px; }
+.photoControls .secondary { min-height: 32px; padding: 6px 10px; font-size: 11px; flex: 1; }
+.photoFileName { font-size: 10px; color: #7a8ba5; margin: 14px 0 0; overflow-wrap: anywhere; }
+.photoNote { font-size: 10px; color: #5377ad; margin: 5px 0 0; }
+.photoError { background: #fff0f2; border: 1px solid #f0d8dc; color: #a63b50; font-size: 11px; line-height: 1.5; padding: 9px; border-radius: 6px; margin-bottom: 0; }
+@media (max-width: 650px) {
+  .productEditor { grid-template-columns: 1fr; }
+  .photoPanel { border-right: 0; border-bottom: 1px solid #e7ecf4; padding: 20px; }
+  .photoDrop { max-width: 230px; margin-inline: auto; }
+}
 .formFields { border: 0; margin: 0; padding: 23px 27px; display: flex; flex-direction: column; gap: 17px; }.formSection { font-size: 10px; font-weight: 700; color: #8390a4; letter-spacing: 1.5px; margin: 0 0 2px; }
 .formFields label { font-size: 12px; color: #42516a; font-weight: 600; display: block; }.formFields label > span { color: #3562d5; }.formFields label small { color: #99a3b1; font-size: 10px; font-weight: 400; margin-left: 5px; }
-.formFields input { width: 100%; height: 42px; border: 1px solid #dce3ed; border-radius: 7px; padding: 9px 12px; display: block; margin-top: 8px; color: #263a55; background: white; font-size: 13px; }.formFields input::placeholder { color: #9ca7b6; }.formFields input:focus { outline: 2px solid #4574df; outline-offset: 1px; }.formFields:disabled { opacity: .65; }
+.formFields input, .formFields select { width: 100%; height: 42px; border: 1px solid #dce3ed; border-radius: 7px; padding: 9px 12px; display: block; margin-top: 8px; color: #263a55; background: white; font-size: 13px; }.formFields input::placeholder { color: #9ca7b6; }.formFields input:focus, .formFields select:focus { outline: 2px solid #4574df; outline-offset: 1px; }.formFields:disabled { opacity: .65; }
 .formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }.fieldHint { font-size: 11px; line-height: 1.5; color: #8390a3; margin: -9px 0 0; }
 .dialogFooter { position: sticky; bottom: 0; padding: 18px 27px; background: #f9fbfd; border-top: 1px solid #e9edf3; display: flex; justify-content: flex-end; gap: 10px; }.deleteBody { padding: 25px 27px; line-height: 1.7; font-size: 14px; color: #66758c; }.deleteBody strong { color: #263750; overflow-wrap: anywhere; }.deleteSymbol { width: 55px; height: 55px; display: grid; place-items: center; background: #fff0f1; border-radius: 12px; color: #c75061; }
 @media (min-width: 1600px) { .main { padding: 42px 48px; }.header { padding: 0 48px; }.stat { padding: 26px; }.table td { padding-top: 18px; padding-bottom: 18px; }.productCell strong { max-width: 420px; }.search { width: 300px; } }
 @media (max-width: 1200px) { .sidebar { width: 200px; padding-inline: 12px; }.brand { font-size: 18px; gap: 8px; }.brand small { font-size: 6px; }.workspace { margin-left: 200px; }.main { padding: 27px 22px; }.header { padding-inline: 22px; }.headingActions { flex-wrap: wrap; justify-content: flex-end; }.search { width: 220px; }.stat { padding: 18px 14px; }.statIcon { width: 35px; height: 35px; }.toolbar { flex-wrap: wrap; }.categories { min-width: 60%; }.stockSelect { margin-left: auto; } }
 @media (max-width: 980px) { .sidebar { width: 78px; padding-inline: 12px; }.brand { padding: 0; justify-content: center; }.brand > div, .navLabel, .sidebar nav span, .sidebarBottom { display: none; }.sidebar nav { margin-top: 42px; }.sidebar nav a, .sidebar nav button { justify-content: center; padding: 15px; }.workspace { margin-left: 78px; }.pageHeading { flex-wrap: wrap; }.headingActions { justify-content: flex-start; width: 100%; }.search { flex: 1; }.stats { gap: 10px; }.stat { position: relative; }.statIcon { width: 28px; height: 28px; position: absolute; top: 14px; right: 12px; }.statIcon svg { width: 16px; }.stat p { padding-right: 29px; }.stat strong { font-size: 26px; } }
 @media (max-width: 650px) { .sidebar { width: 60px; padding: 21px 7px; }.brandMark { width: 36px; height: 36px; }.sidebar nav a, .sidebar nav button { padding: 12px; }.workspace { margin-left: 60px; }.header { height: 56px; padding: 0 16px; }.currency { display: none; }.main { padding: 24px 14px; }.pageHeading h1 { font-size: 29px; }.stats { grid-template-columns: 1fr 1fr; }.pageHeading p { font-size: 11px; }.headingActions { gap: 8px; }.headingActions .primary { padding-inline: 12px; }.search { width: 100px; }.panelHeader { padding: 19px 15px; }.panelHeader p { font-size: 10px; }.panelHeader h2 { font-size: 14px; }.toolbar { padding: 0 14px 15px; }.tableFooter { padding: 14px; flex-wrap: wrap; }.workspaceFooter { flex-direction: column; font-size: 9px; }.formFields { padding: 20px; }.dialogHeader, .dialogFooter { padding: 20px; }.toast { bottom: 16px; right: 16px; }.loadError { margin-inline: 14px; flex-wrap: wrap; } }
+
+.priceBasis { display: block; margin-top: 5px; color: #7f8da4; font-size: 11px; font-weight: 400; }

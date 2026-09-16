@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { nameProductImage } from "@/lib/product-images";
+import { isMeasurementUnit, isPricingAmount } from "@/lib/product-pricing";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -88,6 +90,20 @@ export async function PATCH(request: Request, context: Context) {
     }
   }
 
+  if (Object.hasOwn(fields, "pricingAmount")) {
+    const pricingAmount = parseNumber(fields.pricingAmount);
+    if (!isPricingAmount(pricingAmount)) {
+      return NextResponse.json({ error: "Pricing amount must be a finite number greater than zero." }, { status: 400 });
+    }
+    data.pricingAmount = pricingAmount;
+  }
+  if (Object.hasOwn(fields, "unit")) {
+    if (!isMeasurementUnit(fields.unit)) {
+      return NextResponse.json({ error: "Select a valid measurement unit." }, { status: 400 });
+    }
+    data.unit = fields.unit;
+  }
+
   if (Object.hasOwn(fields, "price")) {
     const price = parseNumber(fields.price);
     if (!Number.isFinite(price) || price < 0) {
@@ -131,6 +147,12 @@ export async function PATCH(request: Request, context: Context) {
   }
 
   try {
+    const current = await prisma.product.findUniqueOrThrow({ where: { id } });
+    data.image = await nameProductImage(
+      data.image === undefined ? current.image : data.image as string | null,
+      typeof data.name === "string" ? data.name : current.name,
+      typeof data.category === "string" ? data.category : current.category,
+    );
     const product = await prisma.product.update({ where: { id }, data });
     return NextResponse.json(product);
   } catch (error) {

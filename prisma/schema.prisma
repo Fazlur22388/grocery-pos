@@ -12,6 +12,8 @@ model Product {
   name      String
   category  String
   price     Float
+  pricingAmount Float @default(1)
+  unit      String   @default("Pcs")
   quantity  Int      @default(0)
   image     String?
   barcode   String?  @unique

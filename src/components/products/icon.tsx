@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  image: "M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM3 16l5-5 5 5 3-3 5 5M15 7h.01",
+  upload: "M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6",
   shop: "M3 10h18M4 10v11h16V10M2 10l3-7h14l3 7M9 21v-7h6v7M8 3l-1 7m9-7 1 7",
   grid: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z",
   box: "m12 3 9 5v9l-9 5-9-5V8l9-5Zm0 10 9-5M12 13 3 8m9 5v9M7.5 5.5l9 5",

@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { nameProductImage } from "@/lib/product-images";
+import { isMeasurementUnit, isPricingAmount } from "@/lib/product-pricing";
 
 export async function GET() {
   try {
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, category, price, quantity, barcode, image } = body as Record<
+  const { name, category, price, quantity, barcode, image, pricingAmount = 1, unit = "Pcs" } = body as Record<
     string,
     unknown
   >;
@@ -58,6 +60,10 @@ export async function POST(request: Request) {
 
   const parsedPrice = parseNumber(price);
   const parsedQuantity = parseNumber(quantity);
+  const parsedPricingAmount = parseNumber(pricingAmount);
+  if (!isPricingAmount(parsedPricingAmount) || !isMeasurementUnit(unit)) {
+    return NextResponse.json({ error: "Enter a pricing amount greater than zero and select a valid unit." }, { status: 400 });
+  }
 
   if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
     return NextResponse.json(
@@ -92,9 +98,11 @@ export async function POST(request: Request) {
         name: name.trim(),
         category: category.trim(),
         price: parsedPrice,
+        pricingAmount: parsedPricingAmount,
+        unit,
         quantity: parsedQuantity,
         barcode: typeof barcode === "string" ? barcode.trim() || null : null,
-        image: typeof image === "string" ? image.trim() || null : null,
+        image: await nameProductImage(typeof image === "string" ? image.trim() || null : null, name.trim(), category.trim()),
       },
     });
 
