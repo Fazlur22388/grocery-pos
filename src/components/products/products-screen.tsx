@@ -78,7 +78,7 @@ export default function ProductsScreen() {
     <aside className={s.sidebar}>
       <div className={s.brand}><span className={s.brandMark}><Icon name="shop" size={25} /></span><div>Grocery <b>POS</b><small>YOUR EVERYDAY STORE COMPANION</small></div></div>
       <span className={s.navLabel}>WORKSPACE</span>
-      <nav aria-label="Main navigation">{navigation.map(item => item.label === "Products" ? <Link key={item.label} href="/" aria-label={item.label} className={s.activeNav} aria-current="page"><Icon name={item.icon} /><span>{item.label}</span><span className={s.activeDot} /></Link> : <button key={item.label} aria-label={item.label + " (coming soon)"} disabled title="Coming soon"><Icon name={item.icon} /><span>{item.label}</span></button>)}</nav>
+      <nav aria-label="Main navigation">{navigation.map(item => item.label === "Products" ? <Link key={item.label} href="/" aria-label={item.label} className={s.activeNav} aria-current="page"><Icon name={item.icon} /><span>{item.label}</span><span className={s.activeDot} /></Link> : item.label === "Sales" ? <Link key={item.label} href="/sales" aria-label={item.label}><Icon name={item.icon} /><span>{item.label}</span></Link> : <button key={item.label} aria-label={item.label + " (coming soon)"} disabled title="Coming soon"><Icon name={item.icon} /><span>{item.label}</span></button>)}</nav>
       <div className={s.sidebarBottom}><div className={s.localNote}><Icon name="shop" size={18} /><div>Made for your shop<small>Local workspace · LKR</small></div></div><div className={s.version}><span>Grocery POS</span><span>v0.1</span></div></div>
     </aside>
     <div className={s.workspace}>
