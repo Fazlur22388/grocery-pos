@@ -1,4 +1,6 @@
 import type { Product } from "@/components/products/product";
+import { isDiscreteUnit } from "@/lib/product-pricing";
+export { isDiscreteUnit };
 
 export type CartItem = { product: Product; quantity: number };
 export type PaymentMethod = "CASH" | "CARD";
@@ -16,17 +18,15 @@ export type SaleResult = {
   replayed: boolean;
 };
 
-export function isDiscreteUnit(unit: string) {
-  return unit === "Pcs" || unit === "Pkt" || unit === "Bottle";
-}
-
 export function quantityStep(unit: string) {
   return isDiscreteUnit(unit) ? 1 : 0.001;
 }
 
 export function normaliseQuantity(quantity: number, product: Product) {
   if (!Number.isFinite(quantity)) return 0;
-  const rounded = isDiscreteUnit(product.unit) ? Math.round(quantity) : Math.round(quantity * 1000) / 1000;
+  const rounded = isDiscreteUnit(product.unit)
+    ? Math.round(quantity)
+    : Math.round(quantity * 1000) / 1000;
   return Math.min(Math.max(0, rounded), Number(product.quantity));
 }
 
@@ -34,7 +34,9 @@ export function normaliseQuantity(quantity: number, product: Product) {
 export function lineTotal(item: CartItem) {
   const price = Number(item.product.price);
   const pricingAmount = Number(item.product.pricingAmount);
-  return Number.isFinite(price) && pricingAmount > 0 ? item.quantity / pricingAmount * price : 0;
+  return Number.isFinite(price) && pricingAmount > 0
+    ? (item.quantity / pricingAmount) * price
+    : 0;
 }
 
 export function cartSubtotal(items: CartItem[]) {
@@ -43,12 +45,17 @@ export function cartSubtotal(items: CartItem[]) {
 
 export function formatMoney(value: number | string) {
   const amount = Number(value);
-  return (Number.isFinite(amount) ? amount : 0).toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return (Number.isFinite(amount) ? amount : 0).toLocaleString("en-LK", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function formatQuantity(value: number | string) {
   const quantity = Number(value);
-  return (Number.isFinite(quantity) ? quantity : 0).toLocaleString("en-LK", { maximumFractionDigits: 3 });
+  return (Number.isFinite(quantity) ? quantity : 0).toLocaleString("en-LK", {
+    maximumFractionDigits: 3,
+  });
 }
 
 export function priceBasis(product: Product) {
